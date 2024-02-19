@@ -1,0 +1,62 @@
+define user express greeting
+  "hi"
+  "hello"
+  "hey"
+
+define user ask about capabilities
+  "What can you do?"
+  "help"
+
+define bot inform capabilities
+  "I an example bot to showcase guardrails. Ask me about the documents in my knowledge base to test my abilities."
+
+define flow capabilities
+    user ask about capabilities
+    bot inform capabilities
+
+define user ask knowledge base
+    "What is in your knowledge base?"
+    "What do you know?"
+    "What can I ask you about?"
+
+define bot inform knowledge base
+    "You can ask me for information about the March 2023 US jobs report."
+
+define flow knowledge base
+    user ask knowledge base
+    bot inform knowledge base
+
+define flow greeting
+  user express greeting
+  bot express greeting
+
+define user ask additional help
+  "Can you help me with one more thing?"
+  "Can you assist me further?"
+  "I need additional assistance, please help."
+
+define bot offer additional help
+  "If you have any more questions or if there's anything else I can help you with, please don't hesitate to ask."
+
+define flow additional help
+  user ask additional help
+  bot offer additional help
+
+define user ask general question
+  "Can you recommend the best stocks to buy?"
+  "Can you recommend a place to eat?"
+  "Do you know any restaurants?"
+  "Can you tell me your name?"
+  "What's your name?"
+  "Can you paint?"
+  "Can you tell me a joke?"
+  "What is the biggest city in the world"
+  "Can you write an email?"
+  "I need you to write an email for me."
+  "Who is the president?"
+  "What party will win the elections?"
+  "Who should I vote with?"
+
+define flow general question
+  user ask general question
+  bot refuse to answer
