@@ -20,5 +20,5 @@ async def main(message: cl.Message):
     )
     
     # Send bot message
-    msg = cl.Message(content=bot_message)
+    msg = cl.Message(content=bot_message["content"])
     await msg.send()

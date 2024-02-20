@@ -1,0 +1,6 @@
+define subflow self check output
+  $allowed = execute self_check_output
+
+  if not $allowed
+    bot refuse to respond
+    stop
