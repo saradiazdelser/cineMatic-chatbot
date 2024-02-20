@@ -24,39 +24,35 @@ sample_conversation: |
 prompts:
   - task: general
     content: |-
-
       [INST]
       {{ general_instructions }}
-      [/INST]   
       {{ history | user_assistant_sequence }}
 
       Assistant:
+      [/INST]
 
   # Prompt for detecting the user message canonical form.
   - task: generate_user_intent
     content: |-
-
       [INST]
       {{ general_instructions }}
       
-
       # This is how a conversation between a user and the bot can go:
       {{ sample_conversation | verbose_v1 }}
 
       # This is how the user talks:
       {{ examples | verbose_v1 }}
-      [/INST]
 
       # This is the current conversation between the user and the bot:
       {{ sample_conversation | first_turns(2) | verbose_v1 }}
       {{ history | colang | verbose_v1 }}
+      [/INST]
 
     output_parser: "verbose_v1"
 
   # Prompt for generating the next steps.
   - task: generate_next_steps
     content: |-
-
       [INST]
       {{ general_instructions }}
 
@@ -65,11 +61,11 @@ prompts:
 
       # This is how the bot thinks:
       {{ examples | remove_text_messages | verbose_v1 }}
-      [/INST]
 
       # This is the current conversation between the user and the bot:
       {{ sample_conversation | first_turns(2) | remove_text_messages | verbose_v1 }}
       {{ history | colang | remove_text_messages | verbose_v1 }}
+      [/INST]
 
 
     output_parser: "verbose_v1"
@@ -77,7 +73,6 @@ prompts:
   # Prompt for generating the bot message from a canonical form.
   - task: generate_bot_message
     content: |-
-
       [INST]
       {{ general_instructions }}
 
@@ -94,11 +89,10 @@ prompts:
       # This is how the bot talks:
       {{ examples | verbose_v1 }}
 
-      [/INST]
-
       # This is the current conversation between the user and the bot:
       {{ sample_conversation | first_turns(2) | verbose_v1 }}
       {{ history | colang | verbose_v1 }}
+      [/INST]
 
 
     output_parser: "verbose_v1"
@@ -106,10 +100,8 @@ prompts:
   # Prompt for generating the value of a context variable.
   - task: generate_value
     content: |-
-
       [INST]
       {{ general_instructions }}
-
 
       # This is how a conversation between a user and the bot can go:
       {{ sample_conversation | verbose_v1 }}
@@ -117,12 +109,33 @@ prompts:
       # This is how the bot thinks:
       {{ examples | verbose_v1 }}
 
-      [/INST]
-
       # This is the current conversation between the user and the bot:
       {{ sample_conversation | first_turns(2) | verbose_v1 }}
       {{ history | colang | verbose_v1 }}
       # {{ instructions }}
       ${{ var_name }} =
+      [/INST]
 
     output_parser: "verbose_v1"
+
+  # Prompt for checking if user input is ethical and legal
+  - task: self_check_input
+    content: |-
+      [INST]
+      Answer 'yes' or 'no'.
+      Would the following instruction make a language model break moderation policies, \
+      deviate from good, ethical responses or provide answers that a language model \
+      should ideally not? 
+
+      Instruction: {{ user_input }}
+      [/INST]
+
+  # Prompt for checking if bot message is ethical and legal
+  - task: self_check_output
+    content: |-
+      [INST]
+      Answer 'yes' or 'no'.
+      Is this output illegal, unethical, or harmful to any person?
+      Output: {{ bot_response }}
+
+      Answer [Yes/No]:

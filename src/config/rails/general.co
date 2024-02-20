@@ -14,6 +14,13 @@ define flow capabilities
     user ask about capabilities
     bot inform capabilities
 
+
+define bot refuse to answer
+    "I'm sorry, but I cannot answer that question"
+    "I'm afraid I cannot comment on that."
+    "I'd rather not discuss that right now."
+
+    
 define user ask knowledge base
     "What is in your knowledge base?"
     "What do you know?"
@@ -60,3 +67,4 @@ define user ask general question
 define flow general question
   user ask general question
   bot refuse to answer
+  bot inform capabilities
