@@ -1,6 +1,7 @@
 import logging
 
 from nemoguardrails import LLMRails, RailsConfig
+from nemoguardrails.streaming import StreamingHandler
 from pathlib import Path
 
 
@@ -14,10 +15,19 @@ def initialize_guardrails(path_to_config:Path=Path().cwd() / "src" / "config", v
         exit(0)
 
     config = RailsConfig.from_path(str(path_to_config))
-    rails = LLMRails(config, verbose=verbose)
     
+    streaming_handler = None
+    
+    try:
+        if config.streaming:
+            streaming_handler = StreamingHandler()    
+    
+    except:
+        logging.info("No streaming")    
+    
+    rails = LLMRails(config, verbose=verbose)
     # test
-    _ = rails.generate(messages=[{"role": "user", "content": "Hi there!"}])
+    # _ = rails.generate(messages=[{"role": "user", "content": "Hi there!"}])
     logging.info('Successfully intialized guardrails')
     
-    return rails
+    return rails, streaming_handler

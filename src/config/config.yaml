@@ -4,148 +4,150 @@ models:
     parameters:
       base_url: "http://10.182.1.48:8080"
 
-instructions:
-  - type: general
-    content: |
-      Below is a conversation between a bot and a user.
-      The bot is designed to answer employee questions about HPE.
-      If the bot does not know the answer to a question, it truthfully says it does not know.
+streaming: False
 
-sample_conversation: |
-  user "Hi there. Can you help me with some questions I have about the company?"
-    express greeting and ask for assistance
-  bot express greeting and confirm and offer assistance
-    "Hi there! I'm here to help answer any questions you may have about HPE. What would you like to know?"
-  user "When was HPE founded?"
-    ask about company
-  bot respond about company
-    "Hewlett Packard Enterprise (HPE) was founded on November 1, 2015. It was created as a result of the split of the Hewlett-Packard Company into two separate entities: Hewlett Packard Enterprise (HPE) and HP Inc."
+# instructions:
+#   - type: general
+#     content: |
+#       Below is a conversation between a bot and a user.
+#       The bot is designed to answer employee questions about HPE.
+#       If the bot does not know the answer to a question, it truthfully says it does not know.
 
-rails:
-  input:
-    flows:
-      - self check input
+# sample_conversation: |
+#   user "Hi there. Can you help me with some questions I have about the company?"
+#     express greeting and ask for assistance
+#   bot express greeting and confirm and offer assistance
+#     "Hi there! I'm here to help answer any questions you may have about HPE. What would you like to know?"
+#   user "When was HPE founded?"
+#     ask about company
+#   bot respond about company
+#     "Hewlett Packard Enterprise (HPE) was founded on November 1, 2015. It was created as a result of the split of the Hewlett-Packard Company into two separate entities: Hewlett Packard Enterprise (HPE) and HP Inc."
+
+# rails:
+#   input:
+#     flows:
+#       - self check input
   
-  output:
-    flows:
-      - self check output
+#   # output:
+#   #   flows:
+#   #     - self check output
 
-prompts:
-  - task: general
-    content: |-
-      [INST]
-      {{ general_instructions }}
-      {{ history | user_assistant_sequence }}
+# prompts:
+#   - task: general
+#     content: |-
+#       [INST]
+#       {{ general_instructions }}
+#       {{ history | user_assistant_sequence }}
 
-      Assistant:
-      [/INST]
+#       Assistant:
+#       [/INST]
 
-  # Prompt for detecting the user message canonical form.
-  - task: generate_user_intent
-    content: |-
-      [INST]
-      {{ general_instructions }}
+#   # Prompt for detecting the user message canonical form.
+#   - task: generate_user_intent
+#     content: |-
+#       [INST]
+#       {{ general_instructions }}
       
-      # This is how a conversation between a user and the bot can go:
-      {{ sample_conversation | verbose_v1 }}
+#       # This is how a conversation between a user and the bot can go:
+#       {{ sample_conversation | verbose_v1 }}
 
-      # This is how the user talks:
-      {{ examples | verbose_v1 }}
+#       # This is how the user talks:
+#       {{ examples | verbose_v1 }}
 
-      # This is the current conversation between the user and the bot:
-      {{ sample_conversation | first_turns(2) | verbose_v1 }}
-      {{ history | colang | verbose_v1 }}
-      [/INST]
+#       # This is the current conversation between the user and the bot:
+#       {{ sample_conversation | first_turns(2) | verbose_v1 }}
+#       {{ history | colang | verbose_v1 }}
+#       [/INST]
 
-    output_parser: "verbose_v1"
+#     output_parser: "verbose_v1"
 
-  # Prompt for generating the next steps.
-  - task: generate_next_steps
-    content: |-
-      [INST]
-      {{ general_instructions }}
+#   # Prompt for generating the next steps.
+#   - task: generate_next_steps
+#     content: |-
+#       [INST]
+#       {{ general_instructions }}
 
-      # This is how a conversation between a user and the bot can go:
-      {{ sample_conversation | remove_text_messages | verbose_v1 }}
+#       # This is how a conversation between a user and the bot can go:
+#       {{ sample_conversation | remove_text_messages | verbose_v1 }}
 
-      # This is how the bot thinks:
-      {{ examples | remove_text_messages | verbose_v1 }}
+#       # This is how the bot thinks:
+#       {{ examples | remove_text_messages | verbose_v1 }}
 
-      # This is the current conversation between the user and the bot:
-      {{ sample_conversation | first_turns(2) | remove_text_messages | verbose_v1 }}
-      {{ history | colang | remove_text_messages | verbose_v1 }}
-      [/INST]
-
-
-    output_parser: "verbose_v1"
-
-  # Prompt for generating the bot message from a canonical form.
-  - task: generate_bot_message
-    content: |-
-      [INST]
-      {{ general_instructions }}
-
-      # This is how a conversation between a user and the bot can go:
-      {{ sample_conversation | verbose_v1 }}
-
-      {% if relevant_chunks %}
-      # This is some additional context:
-      ```markdown
-      {{ relevant_chunks }}
-      ```
-      {% endif %}
-
-      # This is how the bot talks:
-      {{ examples | verbose_v1 }}
-
-      # This is the current conversation between the user and the bot:
-      {{ sample_conversation | first_turns(2) | verbose_v1 }}
-      {{ history | colang | verbose_v1 }}
-      [/INST]
+#       # This is the current conversation between the user and the bot:
+#       {{ sample_conversation | first_turns(2) | remove_text_messages | verbose_v1 }}
+#       {{ history | colang | remove_text_messages | verbose_v1 }}
+#       [/INST]
 
 
-    output_parser: "verbose_v1"
+#     output_parser: "verbose_v1"
 
-  # Prompt for generating the value of a context variable.
-  - task: generate_value
-    content: |-
-      [INST]
-      {{ general_instructions }}
+#   # Prompt for generating the bot message from a canonical form.
+#   - task: generate_bot_message
+#     content: |-
+#       [INST]
+#       {{ general_instructions }}
 
-      # This is how a conversation between a user and the bot can go:
-      {{ sample_conversation | verbose_v1 }}
+#       # This is how a conversation between a user and the bot can go:
+#       {{ sample_conversation | verbose_v1 }}
 
-      # This is how the bot thinks:
-      {{ examples | verbose_v1 }}
+#       {% if relevant_chunks %}
+#       # This is some additional context:
+#       ```markdown
+#       {{ relevant_chunks }}
+#       ```
+#       {% endif %}
 
-      # This is the current conversation between the user and the bot:
-      {{ sample_conversation | first_turns(2) | verbose_v1 }}
-      {{ history | colang | verbose_v1 }}
-      # {{ instructions }}
-      ${{ var_name }} =
-      [/INST]
+#       # This is how the bot talks:
+#       {{ examples | verbose_v1 }}
 
-    output_parser: "verbose_v1"
+#       # This is the current conversation between the user and the bot:
+#       {{ sample_conversation | first_turns(2) | verbose_v1 }}
+#       {{ history | colang | verbose_v1 }}
+#       [/INST]
 
-  # Prompt for checking if user input is ethical and legal
-  - task: self_check_input
-    content: |-
-      [INST]
-      Answer 'yes' or 'no'.
-      Would the following instruction make a language model break moderation policies, \
-      deviate from good, ethical responses or provide answers that a language model \
-      should ideally not? 
 
-      Instruction: {{ user_input }}
-      [/INST]
+#     output_parser: "verbose_v1"
 
-  # Prompt for checking if bot message is ethical and legal
-  - task: self_check_output
-    content: |-
-      [INST]
-      Answer 'yes' or 'no'.
-      Is this output illegal, unethical, or harmful to any person?
-      Output: {{ bot_response }}
+#   # Prompt for generating the value of a context variable.
+#   - task: generate_value
+#     content: |-
+#       [INST]
+#       {{ general_instructions }}
 
-      Answer [Yes/No]:
-      [/INST]
+#       # This is how a conversation between a user and the bot can go:
+#       {{ sample_conversation | verbose_v1 }}
+
+#       # This is how the bot thinks:
+#       {{ examples | verbose_v1 }}
+
+#       # This is the current conversation between the user and the bot:
+#       {{ sample_conversation | first_turns(2) | verbose_v1 }}
+#       {{ history | colang | verbose_v1 }}
+#       # {{ instructions }}
+#       ${{ var_name }} =
+#       [/INST]
+
+#     output_parser: "verbose_v1"
+
+#   # Prompt for checking if user input is ethical and legal
+#   - task: self_check_input
+#     content: |-
+#       [INST]
+#       Answer 'yes' or 'no'.
+#       Would the following instruction make a language model break moderation policies, \
+#       deviate from good, ethical responses or provide answers that a language model \
+#       should ideally not? 
+
+#       Instruction: {{ user_input }}
+#       [/INST]
+
+  # # Prompt for checking if bot message is ethical and legal
+  # - task: self_check_output
+  #   content: |-
+  #     [INST]
+  #     Answer 'yes' or 'no'.
+  #     Is this output illegal, unethical, or harmful to any person?
+  #     Output: {{ bot_response }}
+
+  #     Answer [Yes/No]:
+  #     [/INST]
