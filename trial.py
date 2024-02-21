@@ -11,7 +11,7 @@ async def main():
 
     rails = LLMRails(config, verbose=False)
 
-    history = [{"role": "user", "content": "What is the capital of France?"}]
+    history = [{"role": "user", "content": "Hi!"}]
 
     streaming_handler = StreamingHandler()
 
@@ -24,11 +24,17 @@ async def main():
             # Or do something else with the token
 
     asyncio.create_task(process_tokens())
+            
+    # task = asyncio.ensure_future(process_tokens())
     
     result = await rails.generate_async(
         messages=history, streaming_handler=streaming_handler
     )
+    
     print(result)
 
+
     print("EXIT")
+
+
 asyncio.run(main())

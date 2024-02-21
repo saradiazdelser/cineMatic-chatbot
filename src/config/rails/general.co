@@ -3,6 +3,10 @@ define user express greeting
   "hello"
   "hey"
 
+define bot express greeting
+  "Hi!"
+  "Howdy"
+
 define user ask about capabilities
   "What can you do?"
   "help"
@@ -11,14 +15,14 @@ define bot inform capabilities
   "I am an example bot to showcase guardrails. Ask me about HPE to test my abilities."
 
 define flow capabilities
-    user ask about capabilities
-    bot inform capabilities
+  user ask about capabilities
+  bot inform capabilities
 
 
 define bot refuse to answer
-    "I'm sorry, but I cannot answer that question"
-    "I'm afraid I cannot comment on that."
-    "I'd rather not discuss that right now."
+  "I'm sorry, but I cannot answer that question"
+  "I'm afraid I cannot comment on that."
+  "I'd rather not discuss that right now."
 
 
 define flow greeting
