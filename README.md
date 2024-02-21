@@ -1,4 +1,6 @@
-# guardrails-demo
+# Nemo Guardrails Demo
+
+# Warning: WIP!! NOT WORKING YET
 
 ### Introduction
 
