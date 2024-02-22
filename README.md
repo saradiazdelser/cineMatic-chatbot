@@ -19,9 +19,20 @@ The deployed model is a `mistral` model.
 
 ## Instructions
 
-We are working with a Python 3.11 environment with the follwing [dependencies](./requirements.txt). For nemoguardrails speciffically, please check their pre-requisites [page](https://github.com/NVIDIA/NeMo-Guardrails?tab=readme-ov-file#requirements) before installing all our requirements (which includes nemoguardrails version). On the official [repo](https://github.com/NVIDIA/NeMo-Guardrails) you can find more information of how to use guardrails technologies. Steps to launch the demo
+We are working with a Python 3.11 environment with the follwing [dependencies](./requirements.txt). For nemoguardrails speciffically, please check their pre-requisites [page](https://github.com/NVIDIA/NeMo-Guardrails?tab=readme-ov-file#requirements) before installing all our requirements (which includes nemoguardrails version). On the official [repo](https://github.com/NVIDIA/NeMo-Guardrails) you can find more information of how to use guardrails technologies. Steps to launch the demo:
 
 1. Clone repo
+
+    ```console
+    git clone git@github.com:saradiazdelser/guardrails-demo.git
+    ```
+
+1. Create a virtual environment
+
+    ```console
+    python -m venv </path/to/new/virtual/environment>
+    ```
+
 1. Install [dependencies](./requirements.txt)
 
     ```console
@@ -33,6 +44,8 @@ We are working with a Python 3.11 environment with the follwing [dependencies](.
 ```console
 chainlit run app.py -w
 ```
+
+1. Chat with the deployed [app](http://localhost:8000/).
 
 ## Contributors
 
