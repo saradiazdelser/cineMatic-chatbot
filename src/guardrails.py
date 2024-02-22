@@ -21,7 +21,7 @@ def initialize_guardrails(
     rails = LLMRails(config, verbose=verbose)
 
     # test
-    _ = rails.generate(messages=[{"role": "user", "content": "Hi there!"}])
+    _ = rails.generate(messages=[{"role": "user", "content": "Hi there"}])
     logging.info("Successfully intialized guardrails")
 
     return rails

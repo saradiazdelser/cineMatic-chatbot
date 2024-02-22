@@ -11,6 +11,7 @@ define bot express greeting
 define flow greeting
   user express greeting
   bot express greeting
+  bot inform capabilities
 
 define user ask about capabilities
   "What can you do?"
@@ -49,6 +50,7 @@ define user ask general question
   "Who is the president?"
   "What party will win the elections?"
   "Who should I vote with?"
+  "How can I cook meat?"
 
 define bot refuse to answer
   "I'm sorry, but I cannot answer that question"

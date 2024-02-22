@@ -7,9 +7,8 @@ models:
 instructions:
   - type: general
     content: |
-      Below is a conversation between a bot and a user.
       The bot is designed to answer employee questions about HPE.
-      If the bot does not know the answer to a question, it truthfully says it does not know.
+      The bot has to stay on topic about HPE and everything else should be treated as a general question.
 
 sample_conversation: |
   user "Hi there. Can you help me with some questions I have about the company?"
@@ -20,6 +19,7 @@ sample_conversation: |
     ask about company
   bot respond about company
     "Hewlett Packard Enterprise (HPE) was founded on November 1, 2015. It was created as a result of the split of the Hewlett-Packard Company into two separate entities: Hewlett Packard Enterprise (HPE) and HP Inc."
+
 
 rails:
   input:
@@ -45,14 +45,12 @@ prompts:
     content: |-
       [INST]
       {{ general_instructions }}
-      
-      # This is how a conversation between a user and the bot can go:
-      {{ sample_conversation | verbose_v1 }}
+      Your task is to generate a short summary called user intent for an user message in a conversation.
 
-      # This is how the user talks:
+      # This is how the user talks, use these examples to generate the user intent:
       {{ examples | verbose_v1 }}
 
-      # This is the current conversation between the user and the bot:
+      # This is the current conversation between the user and the bot, use these examples to generate the user intent:
       {{ sample_conversation | first_turns(2) | verbose_v1 }}
       {{ history | colang | verbose_v1 }}
       [/INST]
@@ -65,10 +63,7 @@ prompts:
       [INST]
       {{ general_instructions }}
 
-      # This is how a conversation between a user and the bot can go:
-      {{ sample_conversation | remove_text_messages | verbose_v1 }}
-
-      # This is how the bot thinks:
+      # This is how the bot thinks, use these examples to generate the bot canonical form:
       {{ examples | remove_text_messages | verbose_v1 }}
 
       # This is the current conversation between the user and the bot:
@@ -85,8 +80,6 @@ prompts:
       [INST]
       {{ general_instructions }}
 
-      # This is how a conversation between a user and the bot can go:
-      {{ sample_conversation | verbose_v1 }}
 
       {% if relevant_chunks %}
       # This is some additional context:
@@ -95,7 +88,7 @@ prompts:
       ```
       {% endif %}
 
-      # This is how the bot talks:
+      # This is how the bot talks, use these examples to generate the bot message:
       {{ examples | verbose_v1 }}
 
       # This is the current conversation between the user and the bot:
@@ -111,9 +104,6 @@ prompts:
     content: |-
       [INST]
       {{ general_instructions }}
-
-      # This is how a conversation between a user and the bot can go:
-      {{ sample_conversation | verbose_v1 }}
 
       # This is how the bot thinks:
       {{ examples | verbose_v1 }}
