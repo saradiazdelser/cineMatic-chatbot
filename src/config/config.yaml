@@ -3,9 +3,6 @@ models:
     engine: titan_takeoff
     parameters:
       base_url: "http://10.182.1.48:8080"
-      streaming: True
-
-streaming: True
 
 instructions:
   - type: general
