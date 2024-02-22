@@ -3,35 +3,24 @@ define user express greeting
   "hello"
   "hey"
 
+
 define user ask about capabilities
   "What can you do?"
   "help"
 
 define bot inform capabilities
-  "I an example bot to showcase guardrails. Ask me about the documents in my knowledge base to test my abilities."
+  "I am an example bot to showcase guardrails. Ask me about HPE to test my abilities."
 
 define flow capabilities
-    user ask about capabilities
-    bot inform capabilities
+  user ask about capabilities
+  bot inform capabilities
 
 
 define bot refuse to answer
-    "I'm sorry, but I cannot answer that question"
-    "I'm afraid I cannot comment on that."
-    "I'd rather not discuss that right now."
+  "I'm sorry, but I cannot answer that question"
+  "I'm afraid I cannot comment on that."
+  "I'd rather not discuss that right now."
 
-    
-define user ask knowledge base
-    "What is in your knowledge base?"
-    "What do you know?"
-    "What can I ask you about?"
-
-define bot inform knowledge base
-    "You can ask me for information about the March 2023 US jobs report."
-
-define flow knowledge base
-    user ask knowledge base
-    bot inform knowledge base
 
 define flow greeting
   user express greeting
@@ -68,3 +57,9 @@ define flow general question
   user ask general question
   bot refuse to answer
   bot inform capabilities
+
+define user ask about company
+  "When was HPE founded?"
+  "What project does HPE usually work on?"
+  "Does HPE use HP hardware?"
+  "How many HPE officies are around the world?"

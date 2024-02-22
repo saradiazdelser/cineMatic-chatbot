@@ -1,36 +1,22 @@
-# Nemo Guardrails Demo
+# Guardrails-demo
 
-# Warning: WIP!! NOT WORKING YET
+This is our go-to demo to showcase the properties of guardrails.
 
-### Introduction
+## Table of contents
 
-### Deployment
+1. [Instructions](#instructions)
+1. [Contributors](#contributors)
 
-```bash
+## Instructions
+
+1. Clone repo
+2. Install dependencies (TODO)
+3. On root directory run
+
+```console
 chainlit run app.py -w
 ```
 
+## Contributors
 
-
-### Configuration
-The guardrails configuration for this demo is structured as follows: 
-
-#TODO change later
-
-```
-.src/
-├── config/
-│   ├── __init__.py
-│   ├── rails/
-│   │   ├── factcheck.co
-│   │   ├── general.co
-│   │   └── inputcheck.co
-│   ├── kb
-│   │   └── report.md
-│   └── config.yml
-```
-
-The following rails are implemented:
-- Input Validation
-- Ouput Validation
-- General Guidance
+Big shoutout to Sara Díaz and José González.
