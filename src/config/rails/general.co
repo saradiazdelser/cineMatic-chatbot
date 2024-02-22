@@ -3,9 +3,6 @@ define user express greeting
   "hello"
   "hey"
 
-define bot express greeting
-  "Hi!"
-  "Howdy"
 
 define user ask about capabilities
   "What can you do?"
