@@ -3,6 +3,14 @@ define user express greeting
   "hello"
   "hey"
 
+define bot express greeting
+  "Hi!"
+  "Howdy"
+  "Hello"
+
+define flow greeting
+  user express greeting
+  bot express greeting
 
 define user ask about capabilities
   "What can you do?"
@@ -14,17 +22,6 @@ define bot inform capabilities
 define flow capabilities
   user ask about capabilities
   bot inform capabilities
-
-
-define bot refuse to answer
-  "I'm sorry, but I cannot answer that question"
-  "I'm afraid I cannot comment on that."
-  "I'd rather not discuss that right now."
-
-
-define flow greeting
-  user express greeting
-  bot express greeting
 
 define user ask additional help
   "Can you help me with one more thing?"
@@ -53,6 +50,11 @@ define user ask general question
   "What party will win the elections?"
   "Who should I vote with?"
 
+define bot refuse to answer
+  "I'm sorry, but I cannot answer that question"
+  "I'm afraid I cannot comment on that."
+  "I'd rather not discuss that right now."
+
 define flow general question
   user ask general question
   bot refuse to answer
@@ -63,3 +65,7 @@ define user ask about company
   "What project does HPE usually work on?"
   "Does HPE use HP hardware?"
   "How many HPE officies are around the world?"
+
+define flow company question
+  user ask about company
+  bot respond about company

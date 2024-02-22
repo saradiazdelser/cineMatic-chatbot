@@ -4,8 +4,13 @@ This is our go-to demo to showcase the properties of guardrails.
 
 ## Table of contents
 
+1. [Scope](#scope)
 1. [Instructions](#instructions)
 1. [Contributors](#contributors)
+
+## Scope
+
+The scope of this project is to showcase the basic functionalities of [NeMo Guardrails](https://github.com/NVIDIA/NeMo-Guardrails/tree/main)
 
 ## Instructions
 

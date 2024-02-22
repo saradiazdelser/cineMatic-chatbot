@@ -400,6 +400,8 @@ FodyWeavers.xsd
 
 
 # Chainlit
-chainlit.*
 .chainlit*
 .files*
+
+#env
+.env
