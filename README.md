@@ -41,9 +41,9 @@ We are working with a Python 3.11 environment with the follwing [dependencies](.
 
 1. On root directory run
 
-```console
-chainlit run app.py -w
-```
+    ```console
+    chainlit run app.py -w
+    ```
 
 1. Chat with the deployed [app](http://localhost:8000/).
 
