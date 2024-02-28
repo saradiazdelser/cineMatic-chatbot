@@ -47,6 +47,10 @@ We are working with a Python 3.11 environment with the follwing [dependencies](.
 
 1. Chat with the deployed [app](http://localhost:8000/).
 
+    ```console
+    http://localhost:8000/
+    ```
+
 ## Contributors
 
 Big shoutout to Sara Díaz and José González.
