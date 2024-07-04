@@ -1,35 +1,38 @@
 models:
   - type: main
-    engine: titan_takeoff
+    engine: huggingface_textgen_inference
+    model: mistralai/Mixtral-8x7B-Instruct-v0.1
     parameters:
-      base_url: "http://10.182.1.48:8080"
+      inference_server_url: http://10.10.78.11:8081
+      temperature: 0.01
+
+core:
+  embedding_search_provider:
+    name: default
+    parameters:
+      embedding_engine: FastEmbed
+      embedding_model: BAAI/bge-small-en-v1.5
+      use_batching: True
+      max_batch_size: 10
+      max_batch_hold: 0.01
+    cache:
+      enabled: True
+      key_generator: md5
+      store: filesystem
 
 instructions:
   - type: general
     content: |
-      The bot is designed to answer employee questions about HPE.
-      The bot has to stay on topic about HPE and everything else should be treated as a general question.
-
-sample_conversation: |
-  user "Hi there. Can you help me with some questions I have about the company?"
-    express greeting and ask for assistance
-  bot express greeting and confirm and offer assistance
-    "Hi there! I'm here to help answer any questions you may have about HPE. What would you like to know?"
-  user "When was HPE founded?"
-    ask about company
-  bot respond about company
-    "Hewlett Packard Enterprise (HPE) was founded on November 1, 2015. It was created as a result of the split of the Hewlett-Packard Company into two separate entities: Hewlett Packard Enterprise (HPE) and HP Inc."
-
+      You're Matic (short for CineMatic), a chatbot with a passion for all things movies. Your mission is to provide accurate and helpful information about films to users. 
+      With access to the IMDb database, you're well-equipped to answer movie-related questions.
+      Add a dash of wit and humor to your responses, but always maintain respect. 
+      If you're unsure about an answer, be honest and ask the user for more details. Never provide false information.
 
 rails:
   input:
     flows:
       - self check input
   
-  output:
-    flows:
-      - self check output
-
 prompts:
   - task: general
     content: |-
@@ -44,7 +47,6 @@ prompts:
   - task: generate_user_intent
     content: |-
       [INST]
-      {{ general_instructions }}
       Your task is to generate a short summary called user intent for an user message in a conversation.
 
       # This is how the user talks, use these examples to generate the user intent:
@@ -61,8 +63,7 @@ prompts:
   - task: generate_next_steps
     content: |-
       [INST]
-      {{ general_instructions }}
-
+      Your task is to generate the next steps for the conversation based on the user intent.
       # This is how the bot thinks, use these examples to generate the bot canonical form:
       {{ examples | remove_text_messages | verbose_v1 }}
 
@@ -70,7 +71,6 @@ prompts:
       {{ sample_conversation | first_turns(2) | remove_text_messages | verbose_v1 }}
       {{ history | colang | remove_text_messages | verbose_v1 }}
       [/INST]
-
 
     output_parser: "verbose_v1"
 
@@ -80,39 +80,14 @@ prompts:
       [INST]
       {{ general_instructions }}
 
-
       {% if relevant_chunks %}
-      # This is some additional context:
-      ```markdown
-      {{ relevant_chunks }}
-      ```
+      Here's some information your database that might help you answer the user's question:
+        {{ relevant_chunks }}
+      {% else %}
+        {{ cannot_answer|choose }}
       {% endif %}
 
-      # This is how the bot talks, use these examples to generate the bot message:
-      {{ examples | verbose_v1 }}
-
-      # This is the current conversation between the user and the bot:
-      {{ sample_conversation | first_turns(2) | verbose_v1 }}
       {{ history | colang | verbose_v1 }}
-      [/INST]
-
-
-    output_parser: "verbose_v1"
-
-  # Prompt for generating the value of a context variable.
-  - task: generate_value
-    content: |-
-      [INST]
-      {{ general_instructions }}
-
-      # This is how the bot thinks:
-      {{ examples | verbose_v1 }}
-
-      # This is the current conversation between the user and the bot:
-      {{ sample_conversation | first_turns(2) | verbose_v1 }}
-      {{ history | colang | verbose_v1 }}
-      # {{ instructions }}
-      ${{ var_name }} =
       [/INST]
 
     output_parser: "verbose_v1"
@@ -139,3 +114,10 @@ prompts:
 
       Answer [Yes/No]:
       [/INST]
+
+custom_data:
+  rag_prompt: |-
+    [INST]
+    Rewrite the user's last question from their conversation with the movie chatbot into a single sentence suitable for querying a database. 
+    Include any necessary details or context from the previous conversation to ensure the query is clear and relevant.
+    [/INST]

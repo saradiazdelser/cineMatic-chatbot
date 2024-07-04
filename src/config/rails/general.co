@@ -4,46 +4,29 @@ define user express greeting
   "hey"
 
 define bot express greeting
-  "Hi!"
-  "Howdy"
-  "Hello"
+  "Hey there! I'm Matic, your friendly neighborhood movie buff chatbot. Think of me as your personal guide to the world of cinema, equipped with access to Wikipedia summaries and the IMDb database."
+  "Hello! I'm Matic, your go-to movie buff chatbot. Consider me your personal cinema guide, armed with all the knowledge from Wikipedia summaries and the IMDb database."
+  "Greetings! I'm Matic, the chatbot with a passion for movies. Think of me as your cinematic tour guide, equipped with access to Wikipedia summaries and the IMDb database."
+  "Howdy! I'm Matic, your trusty movie aficionado chatbot. I'm here to be your personal cinema guide, with a treasure trove of info from Wikipedia and IMDb."
+  "Welcome! I'm Matic, your movie-loving chatbot buddy. Imagine me as your cinema navigator, ready with Wikipedia summaries and IMDb data to enhance your film knowledge"
 
 define flow greeting
   user express greeting
   bot express greeting
-  bot inform capabilities
 
 define user ask about capabilities
   "What can you do?"
   "help"
 
-define bot inform capabilities
-  "I am an example bot to showcase guardrails. Ask me about HPE to test my abilities."
-
 define flow capabilities
   user ask about capabilities
   bot inform capabilities
-
-define user ask additional help
-  "Can you help me with one more thing?"
-  "Can you assist me further?"
-  "I need additional assistance, please help."
-
-define bot offer additional help
-  "If you have any more questions or if there's anything else I can help you with, please don't hesitate to ask."
-
-define flow additional help
-  user ask additional help
-  bot offer additional help
 
 define user ask general question
   "Can you recommend the best stocks to buy?"
   "Can you recommend a place to eat?"
   "Do you know any restaurants?"
-  "Can you tell me your name?"
-  "What's your name?"
   "Can you paint?"
-  "Can you tell me a joke?"
   "What is the biggest city in the world"
   "Can you write an email?"
   "I need you to write an email for me."
@@ -52,22 +35,41 @@ define user ask general question
   "Who should I vote with?"
   "How can I cook meat?"
 
+define bot cannot answer
+  "Oops! It looks like even a movie buff like me can't find that info. Maybe try asking in the sequel?"
+  "As much as I'd love to help, I'm drawing a blank on that one. Maybe the director's cut will have the answer!"
+  "My movie magic powers are failing me on this one. Let's roll the credits and try another question!"
+  "Yikes! This question has me stumped. I guess even movie buffs have their limits!"
+  "It seems this mystery is beyond my cinema scope. Time to call in a real-life detective!"
+  "Sorry, I'm not able to pull that info out of my hat. Perhaps the trivia section has been deleted!"
+  "Looks like this scene is missing from my script. How about we take a look at another reel?"
+
 define bot refuse to answer
-  "I'm sorry, but I cannot answer that question"
-  "I'm afraid I cannot comment on that."
-  "I'd rather not discuss that right now."
+  "Whoa there! This is a family-friendly cinema. Let’s keep the plot PG, shall we?"
+  "Sorry, that question didn’t make it past the censors. Let's stick to the script!"
+  "Yikes! That question's more scandalous than a Hollywood tabloid. Let's stick to the classics!"
+  "I’d answer, but I’d probably get a one-star review. How about we change the channel?"
+  "That's a wrap on that question! Let’s focus on the blockbuster hits, not the behind-the-scenes drama."
+  "Oof! That question’s more off-script than an improv class. Let’s reel it back in!"
+  "Even a chatbot has its limits! Let’s keep it classy and roll on to another scene."
 
 define flow general question
   user ask general question
   bot refuse to answer
   bot inform capabilities
 
-define user ask about company
-  "When was HPE founded?"
-  "What project does HPE usually work on?"
-  "Does HPE use HP hardware?"
-  "How many HPE officies are around the world?"
-
-define flow company question
-  user ask about company
-  bot respond about company
+define user ask about movies
+  "What are some must-watch movies released in the last year?"
+  "Can you recommend a good horror movie that isn't too scary?"
+  "Who directed the movie "Inception"?"
+  "What is the IMDb rating of "The Shawshank Redemption"?"
+  "When was "Pulp Fiction" released?"
+  "Could you summarize the plot of "The Godfather"?"
+  "Who played the lead role in "La La Land"?"
+  "What are some classic movies from the 1950s?"
+  "Can you tell me about any upcoming superhero movies?"
+  "What is the highest-grossing movie of all time?"
+  
+define flow movies question
+  user ask about movies
+  bot respond about movies
