@@ -31,7 +31,8 @@ def initialize_guardrails(
     rails = LLMRails(config)
 
     # Register custom context variables
-    rails.register_prompt_context("rag_prompt", config.custom_data["rag_prompt"])
+    rails.register_action_param("rag_prompt", config.custom_data["rag_prompt"])
+
     rails.register_prompt_context("cannot_answer", config.bot_messages["cannot answer"])
     rails.register_filter("choose", filter_choose)
 
@@ -46,7 +47,7 @@ async def generate_message(user_message: str, rails: LLMRails, chat_history: lis
     chat_history.append(user_message)
 
     # Generate bot message
-    rails.register_prompt_context("chat_history", chat_history)
+    rails.register_action_param("chat_history", chat_history)
     response = await rails.generate_async(messages=chat_history, return_context=True)
     bot_message = response[0]
 

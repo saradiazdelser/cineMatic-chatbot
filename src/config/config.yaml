@@ -32,7 +32,7 @@ rails:
   input:
     flows:
       - self check input
-  
+      
 prompts:
   - task: general
     content: |-

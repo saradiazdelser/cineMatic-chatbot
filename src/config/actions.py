@@ -11,23 +11,29 @@ logger = logging.getLogger(__name__)
 async def retrieve_relevant_chunks(
     context: Optional[dict] = None,
     llm: Optional[BaseLLM] = None,
+    rag_prompt: Optional[str] = None,
+    chat_history: Optional[list] = [],  # tODO: not showing!
 ) -> ActionResult:
     """Retrieve relevant knowledge chunks and update the context."""
     # Retrieve the user message and bot messages and RAG prompt
-    chat_history = context.get("chat_history")
-    messages = [
-        f'{str(item["role"]).title()}: {item["content"]}' for item in chat_history[-10]
-    ]
-    rag_prompt = context.get("rag_prompt") + "\n" + "\n".join(messages)
-    logger.debug(f"RAG:: Reword prompt: {rag_prompt}")
+    print(rag_prompt)
+    try:
+        messages = [
+            f'{str(item["role"]).title()}: {item["content"]}' for item in chat_history
+        ]
+    except:
+        messages = []
+
+    rag_prompt = rag_prompt + "\n" + "\n".join(messages)
+    logger.info(f"RAG:: Reword prompt: {rag_prompt}")
 
     context_updates = {}
 
-    # Generate a rephrased version of the user message for search
-    logger.warning("LLM" + str(llm))
+    # # Generate a rephrased version of the user message for search
     response = await llm.agenerate(prompts=[rag_prompt])
-    search_message = response.generations[0][0].text
-    logger.debug(f"RAG:: Reword response: {search_message}")
+    print(response.generations[0][0].text)
+    search_message = "\n".join(messages)
+    logger.info(f"RAG:: Reword response: {search_message}")
 
     chunks = await __retrieve_relevant_chunks(text=search_message)
     if chunks != []:
