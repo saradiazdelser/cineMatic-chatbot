@@ -1,21 +1,32 @@
 import logging
-import chainlit as cl
 
-from src import guardrails as guardrails
+from src import api
 
-logging.basicConfig(level=logging.DEBUG)
-rails = guardrails.initialize_guardrails(verbose=True)
+log_config = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "default": {
+            "format": "[%(levelname)s] %(name)s {%(pathname)s:%(lineno)d} %(message)s",
+        },
+    },
+    "handlers": {
+        "default": {
+            "formatter": "default",
+            "class": "logging.StreamHandler",
+            "stream": "ext://sys.stdout",
+        },
+    },
+    "loggers": {
+        "": {  # root logger
+            "level": "DEBUG",
+            "handlers": ["default"],
+        },
+    },
+}
 
 
-@cl.on_message  # called every time a user sends a message
-async def main(message: cl.Message):
-    """Receive a user message and return a bot message"""
+if __name__ == "__main__":
+    import uvicorn
 
-    message_history = []
-    message_history.append({"role": "user", "content": message.content})
-
-    bot_message = rails.generate(messages=message_history)
-
-    # Send bot message
-    msg = cl.Message(content=bot_message["content"])
-    await msg.send()
+    uvicorn.run(api.app, log_config=log_config)
