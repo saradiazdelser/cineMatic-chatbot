@@ -63,7 +63,7 @@ async def __retrieve_relevant_chunks(text: str):
     body = {
         "text": text,
         "limit": 1,
-        "threshold": 0.85,
+        "threshold": 0.75,
         "indexes": ["imbd_movies"],
     }
     response = requests.post(url, headers=headers, json=body)
