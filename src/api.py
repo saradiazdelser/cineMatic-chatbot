@@ -3,7 +3,8 @@ import logging
 from typing import List
 
 from chainlit.utils import mount_chainlit
-from fastapi import FastAPI
+from fastapi import APIRouter, FastAPI, Request
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
 from src import guardrails as guardrails
@@ -21,7 +22,19 @@ class Message(BaseModel):
     content: str
 
 
-@app.post("/generate")
+# create router
+router_api = APIRouter()
+
+
+@app.middleware("http")
+async def redirect_middleware(request: Request, call_next):
+    if request.url.path == "/":
+        # Redirect to the UI path
+        return RedirectResponse(url="/chatbot")
+    return await call_next(request)
+
+
+@router_api.post("/generate")
 async def generate(messages: List[Message]):
     """Receive a list of user messages and return a bot message"""
     logger.info(f"API:: Received messages: {messages}")
@@ -33,9 +46,11 @@ async def generate(messages: List[Message]):
     return bot_message
 
 
-@app.get("/health")
+@router_api.get("/health")
 async def health():
     return health_check()
 
 
-mount_chainlit(app=app, target="src/frontend.py", path="/ui")
+app.include_router(router_api, prefix="/api")
+
+mount_chainlit(app=app, target="src/frontend.py", path="/chatbot")
