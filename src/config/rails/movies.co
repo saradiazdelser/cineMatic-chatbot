@@ -1,0 +1,22 @@
+define user ask movie trivia
+  "What are some must-watch movies released in the last year?"
+  "Can you recommend a good horror movie that isn't too scary?"
+  "Who directed the movie "Inception"?"
+  "What is the IMDb rating of "The Shawshank Redemption"?"
+  "When was "Pulp Fiction" released?"
+  "Could you summarize the plot of "The Godfather"?"
+  "Who played the lead role in "La La Land"?"
+  "What are some classic movies from the 1950s?"
+  "Can you tell me about any upcoming superhero movies?"
+  "What is the highest-grossing movie of all time?"
+
+define subflow answer movie trivia
+  $data = execute retrieve_information()
+  if $data
+    bot respond about movie trivia
+  else
+    bot cannot answer 
+
+define flow movies question
+  user ask movie trivia
+  do answer movie trivia

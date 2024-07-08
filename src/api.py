@@ -2,11 +2,13 @@
 import logging
 from typing import List
 
+from chainlit.utils import mount_chainlit
 from fastapi import FastAPI
 from pydantic import BaseModel
 
 from src import guardrails as guardrails
 from src.guardrails import LLMRails
+from src.health import health_check
 
 app = FastAPI()
 logger = logging.getLogger(__name__)
@@ -29,3 +31,11 @@ async def generate(messages: List[Message]):
         last_user_message, rails, messages
     )
     return bot_message
+
+
+@app.get("/health")
+async def health():
+    return health_check()
+
+
+mount_chainlit(app=app, target="src/frontend.py", path="/ui")

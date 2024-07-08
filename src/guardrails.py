@@ -1,17 +1,18 @@
 import logging
 from pathlib import Path
+from typing import Dict
 
 from nemoguardrails import LLMRails, RailsConfig
 
 logger = logging.getLogger(__name__)
 
 
-def filter_choose(options: list):
+def filter_choose(cannot_answer: list):
     """Randomly choose and option from the given list"""
     try:
         import random
 
-        return random.choice(options)
+        return random.choice(cannot_answer)
     except:
         return ""
 
@@ -28,7 +29,7 @@ def initialize_guardrails(
         exit(0)
 
     config = RailsConfig.from_path(str(path_to_config))
-    rails = LLMRails(config)
+    rails = LLMRails(config, verbose=True)
 
     # Register custom context variables
     rails.register_action_param("rag_prompt", config.custom_data["rag_prompt"])
@@ -41,7 +42,9 @@ def initialize_guardrails(
     return rails
 
 
-async def generate_message(user_message: str, rails: LLMRails, chat_history: list = []):
+async def generate_message(
+    user_message: Dict[str, str], rails: LLMRails, chat_history: list = []
+):
     """Generate a bot message based on the user message"""
     # Save user message to history
     chat_history.append(user_message)
