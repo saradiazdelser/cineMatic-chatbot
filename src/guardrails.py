@@ -17,6 +17,14 @@ def filter_choose(cannot_answer: list):
         return ""
 
 
+def post_processing(text):
+    # Encode the string to UTF-8 bytes, ignoring errors
+    utf8_encoded_text = text.encode("utf-8", "ignore")
+    # Decode the bytes back to a UTF-8 string
+    cleaned_text = utf8_encoded_text.decode("utf-8")
+    return cleaned_text
+
+
 def initialize_guardrails(
     path_to_config: Path = Path().cwd() / "src" / "config",
 ) -> LLMRails:
@@ -54,6 +62,10 @@ async def generate_message(
     response = await rails.generate_async(messages=chat_history, return_context=True)
     bot_message = response[0]
 
+    bot_message["content"] = post_processing(bot_message["content"])
+
     # Save bot message to history
     chat_history.append(bot_message)
+
+    # clean
     return chat_history, bot_message
