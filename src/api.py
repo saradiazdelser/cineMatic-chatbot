@@ -3,13 +3,12 @@ import logging
 from pathlib import Path
 from typing import List
 
-from chainlit.utils import mount_chainlit
 from fastapi import APIRouter, FastAPI, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from src.chat import Chat, LLMRails
+from src.chat import Chat
 from src.health import health_check
 
 app = FastAPI()
@@ -25,14 +24,6 @@ class Message(BaseModel):
 
 # create router
 router_api = APIRouter()
-
-
-@app.middleware("http")
-async def redirect_middleware(request: Request, call_next):
-    if request.url.path == "/":
-        # Redirect to the UI path
-        return RedirectResponse(url="/chatbot")
-    return await call_next(request)
 
 
 @router_api.post("/generate_moderated")
@@ -65,3 +56,11 @@ async def health():
 # Use public endpoint for static files
 public_directory = Path(__file__).parent.parent / "public"
 public = StaticFiles(directory=str(public_directory))
+
+
+# Define redirecting middleware
+async def redirect_middleware(request: Request, call_next):
+    if request.url.path == "/":
+        # Redirect to the UI path
+        return RedirectResponse(url="/chatbot")
+    return await call_next(request)

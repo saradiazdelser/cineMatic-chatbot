@@ -3,7 +3,7 @@ import yaml
 from chainlit.utils import mount_chainlit
 from fastapi import FastAPI
 
-from src.api import public, router_api
+from src.api import public, redirect_middleware, router_api
 
 
 def setup_logging(config_file):
@@ -13,6 +13,9 @@ def setup_logging(config_file):
 
 
 app = FastAPI()
+
+# Register middleware
+app.middleware("http")(redirect_middleware)
 
 # Include the API router in the app
 app.include_router(router_api, prefix="/api")
