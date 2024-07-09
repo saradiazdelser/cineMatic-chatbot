@@ -2,8 +2,9 @@ from typing import List
 
 import chainlit as cl
 
-from src import guardrails as guardrails
-from src.guardrails import LLMRails
+from chat import Chat, LLMRails
+
+chat = Chat()
 
 
 @cl.set_chat_profiles
@@ -24,7 +25,7 @@ async def chat_profile():
 
 @cl.on_chat_start
 async def on_chat_start():
-    rails: LLMRails = guardrails.initialize_guardrails()
+    rails: LLMRails = chat.rails
     cl.user_session.set("rails", rails)
     cl.user_session.set("chat_history", [])
 
@@ -35,18 +36,18 @@ async def main(message: cl.Message):
     # Retrieve user variables
     chat_profile = cl.user_session.get("chat_profile")
     chat_history: List = cl.user_session.get("chat_history")
-    rails: LLMRails = cl.user_session.get("rails")
     last_user_message = {"role": "user", "content": message.content or ""}
 
     if chat_profile == "Moderated":
         # Generate a bot message
-        new_chat_history, bot_message = await guardrails.generate_message(
-            last_user_message, rails, chat_history
+        new_chat_history, bot_message = await chat.generate_moderated_message(
+            last_user_message, chat_history
         )
 
     else:
-        bot_message = {"role": "bot", "content": "Unmoderated chatbot response"}
-        new_chat_history = chat_history
+        new_chat_history, bot_message = await chat.generate_unmoderated_message(
+            last_user_message, chat_history
+        )
     cl.user_session.set("chat_history", new_chat_history)
 
     await cl.Message(content=bot_message["content"]).send()

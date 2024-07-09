@@ -8,12 +8,15 @@ from nemoguardrails.actions.actions import ActionResult
 logger = logging.getLogger(__name__)
 
 
-async def retrieve_relevant_chunks(
-    context: Optional[dict] = None,
-) -> ActionResult:
-    return ActionResult(
-        context_updates={},
-    )
+def format_chat_history(chat_history: list) -> str:
+    """Format the chat history into a single string."""
+    try:
+        messages = [
+            f'{str(item["role"]).title()}: {item["content"]}' for item in chat_history
+        ]
+    except:
+        messages = []
+    return "\n".join(messages)
 
 
 async def retrieve_information(
@@ -24,14 +27,8 @@ async def retrieve_information(
 ) -> ActionResult:
     """Retrieve relevant knowledge chunks and update the context."""
     # Retrieve the user message and bot messages and RAG prompt
-    try:
-        messages = [
-            f'{str(item["role"]).title()}: {item["content"]}' for item in chat_history
-        ]
-    except:
-        messages = []
-
-    # rag_prompt = rag_prompt.format(conversation="\n".join(messages))
+    messages = format_chat_history(chat_history)
+    # rag_prompt = rag_prompt.format(conversation=messages))
     # logger.info(f"RAG:: Reword prompt: {rag_prompt}")
 
     context_updates = {}
@@ -39,7 +36,7 @@ async def retrieve_information(
     # # # Generate a rephrased version of the user message for search
     # response = await llm.agenerate(prompts=[rag_prompt])
     # search_message = response.generations[0][0].text
-    search_message = "\n".join(messages)
+    search_message = messages
     logger.info(f"RAG:: Reword response: {search_message}")
 
     chunks = await __retrieve_relevant_chunks(text=search_message)
