@@ -1,5 +1,5 @@
 # Use the official Python image from the Docker Hub
-FROM python:3.10-slim
+FROM python:3.10
 
 # Install Git
 RUN apt-get update && apt-get install -y git
