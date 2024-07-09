@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  qdrant:
+    container_name: qdrant
+    image: qdrant/qdrant  # Specify the correct Qdrant version
+    ports:
+      - "6333:6333"
+    volumes:
+      - ./db/qdrant:/qdrant/storage
+    networks:
+      - guardrails-demo-network
+
+  api:
+    container_name: qdrant-api
+    build: ./db  # Path to the Qdrant API directory containing Dockerfile
+    ports:
+      - "6000:6000"
+    volumes:
+      - ./db:/app
+    depends_on:
+      - qdrant
+    networks:
+      - guardrails-demo-network
+
+  flask-app:
+    container_name: chatbot-app
+    build: .  # Path to the app directory containing Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - qdrant
+      - qdrant-api
+    networks:
+      - guardrails-demo-network
+
+networks:
+  guardrails-demo-network:
+    driver: bridge

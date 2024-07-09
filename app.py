@@ -1,32 +1,15 @@
-import logging
+import yaml
 
 from src import api
 
-log_config = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "default": {
-            "format": "[%(levelname)s] %(name)s {%(pathname)s:%(lineno)d} %(message)s",
-        },
-    },
-    "handlers": {
-        "default": {
-            "formatter": "default",
-            "class": "logging.StreamHandler",
-            "stream": "ext://sys.stdout",
-        },
-    },
-    "loggers": {
-        "": {  # root logger
-            "level": "DEBUG",
-            "handlers": ["default"],
-        },
-    },
-}
+
+def setup_logging(config_file):
+    with open(config_file, "r") as f:
+        config = yaml.safe_load(f.read())
+    return config
 
 
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(api.app, log_config=log_config)
+    uvicorn.run(api.app, log_config=setup_logging("src/logging.yaml"))
