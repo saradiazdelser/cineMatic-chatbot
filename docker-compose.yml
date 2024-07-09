@@ -7,19 +7,27 @@ services:
     ports:
       - "6333:6333"
     volumes:
-      - ./db/qdrant:/qdrant/storage
+      - ./libraries/db/qdrant:/qdrant/storage
     networks:
       - guardrails-demo-network
 
   rag:
     container_name: rag-app
-    build: ./db  # Path to the Qdrant API directory containing Dockerfile
+    build: ./libraries/db  # Path to the Qdrant API directory containing Dockerfile
     ports:
       - "6000:6000"
     volumes:
-      - ./db:/app
+      - ./libraries/db:/app
     depends_on:
       - qdrant
+    networks:
+      - guardrails-demo-network
+
+  alignscore:
+    container_name: alignscore-server
+    build: ./libraries/align_score  # Path to the AlignScore API directory containing Dockerfile
+    ports:
+      - "5000:5000"
     networks:
       - guardrails-demo-network
 
@@ -35,6 +43,7 @@ services:
       - rag
     networks:
       - guardrails-demo-network
+
 
 networks:
   guardrails-demo-network:
