@@ -11,8 +11,8 @@ services:
     networks:
       - guardrails-demo-network
 
-  api:
-    container_name: qdrant-api
+  rag:
+    container_name: rag-app
     build: ./db  # Path to the Qdrant API directory containing Dockerfile
     ports:
       - "6000:6000"
@@ -23,7 +23,7 @@ services:
     networks:
       - guardrails-demo-network
 
-  flask-app:
+  chat:
     container_name: chatbot-app
     build: .  # Path to the app directory containing Dockerfile
     ports:
@@ -32,7 +32,7 @@ services:
       - .:/app
     depends_on:
       - qdrant
-      - qdrant-api
+      - rag
     networks:
       - guardrails-demo-network
 

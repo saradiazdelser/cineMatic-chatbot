@@ -5,6 +5,8 @@ import requests
 from langchain.llms import BaseLLM
 from nemoguardrails.actions.actions import ActionResult
 
+from src.settings import RETRIEVAL_ENDPOINT
+
 logger = logging.getLogger(__name__)
 
 
@@ -55,7 +57,7 @@ async def retrieve_information(
 
 
 async def __retrieve_relevant_chunks(text: str):
-    url = "http://localhost:6000/search"
+    url = RETRIEVAL_ENDPOINT
     headers = {"Content-Type": "application/json", "accept": "application/json"}
     body = {
         "text": text,
