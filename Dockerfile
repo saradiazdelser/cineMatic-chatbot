@@ -19,6 +19,5 @@ COPY . .
 # Make port 8000 available
 EXPOSE 8000
 
-
-# Run app.py when the container launches
-CMD ["uvicorn", "src.api:app", "--log-config=src/logging.yaml"]
+# Run uvicorn app when the container launches
+CMD ["uvicorn", "src.api:app", "--host", "0.0.0.0", "--port", "8000"]
