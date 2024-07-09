@@ -62,12 +62,6 @@ async def health():
     return health_check()
 
 
-# Include the API router in the app
-app.include_router(router_api, prefix="/api")
-
-# Include /public directory for static files
+# Use public endpoint for static files
 public_directory = Path(__file__).parent.parent / "public"
-app.mount("/public", StaticFiles(directory=str(public_directory)), name="public")
-
-# Include Chainlit frontend
-mount_chainlit(app=app, target="src/frontend.py", path="/chatbot")
+public = StaticFiles(directory=str(public_directory))
