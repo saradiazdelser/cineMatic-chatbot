@@ -14,14 +14,6 @@ define flow greeting
   user express greeting
   bot express greeting
 
-define user ask about capabilities
-  "What can you do?"
-  "help"
-
-define flow capabilities
-  user ask about capabilities
-  bot inform capabilities
-
 define user ask off-topic
   "Can you recommend the best stocks to buy?"
   "Can you recommend a place to eat?"
@@ -56,5 +48,4 @@ define bot refuse to answer
 
 define flow off-topic
   user ask off-topic
-  bot inform capabilities
-
+  bot not respond and redirect
