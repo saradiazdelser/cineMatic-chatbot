@@ -1,6 +1,7 @@
 import logging
+from collections import deque
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Deque, Dict, List, Tuple
 
 from huggingface_hub import InferenceClient
 from jinja2 import Environment, Template
@@ -12,14 +13,28 @@ from src.settings import INFERENCE_ENDPOINT
 logger = logging.getLogger(__name__)
 
 
-class Chat:
-    def __init__(self):
+class ChatBot:
+    def __init__(self, memory_size: int = 10):
         self.rails: LLMRails = None
         self.client: InferenceClient = None
         self.prompt_template: Template = None
         self.system_prompt: str = None
+        self.history: Deque[Dict] = deque(maxlen=memory_size)
         self.initialize_guardrails()
         self.initialize_client()
+
+    def __str__(self) -> str:
+        return (
+            "ChatBot(rails={}, client={}, prompt_template={}, system_prompt={})".format(
+                str(self.rails),
+                str(self.client),
+                str(self.prompt_template),
+                str(self.system_prompt),
+            )
+        )
+
+    def __repr__(self) -> str:
+        return self.__str__()
 
     @staticmethod
     def post_processing(text: str) -> str:
@@ -28,6 +43,19 @@ class Chat:
         # Decode the bytes back to a UTF-8 string
         cleaned_text = utf8_encoded_text.decode("utf-8")
         return cleaned_text
+
+    def clear_history(self):
+        """Clear conversation history."""
+        self.history.clear()
+        logger.info("Conversation history cleared.")
+
+    def get_history(self) -> List[Dict]:
+        """Get current conversation history."""
+        return list(self.history)
+
+    def add_history(self, message: Dict[str, str]):
+        """Add message to conversation history."""
+        self.history.append(message)
 
     def build_prompt_from_config(self, config: RailsConfig):
         """Build prompt template from RailsConfig object."""
@@ -53,12 +81,12 @@ class Chat:
         self.prompt_template = env.from_string(generate_bot_message)
         return
 
-    def initialize_client(self) -> InferenceClient:
+    def initialize_client(self):
         self.client = InferenceClient(model=INFERENCE_ENDPOINT)
 
     def initialize_guardrails(
         self, path_to_config: Path = Path().cwd() / "src" / "config"
-    ) -> LLMRails:
+    ):
         """Load configuration and initialize rails"""
         try:
             if not path_to_config.exists():
@@ -79,21 +107,20 @@ class Chat:
         self.rails.register_action_param("rag_prompt", config.custom_data["rag_prompt"])
 
         logger.info("Successfully initialized guardrails")
-        return self.rails
+        return
 
     async def generate_moderated_message(
-        self, user_message: Dict[str, str], chat_history: List[Dict[str, str]] = []
-    ) -> Tuple[List[Dict[str, str]], Dict[str, str]]:
+        self, user_message: Dict[str, str]
+    ) -> Dict[str, str]:
         """Generate a bot message based on the user message using the NeMo Guardrails framework for moderation.
         Args:
             user_message (Dict[str, str]): User message
-            chat_history (List[Dict[str, str]], optional): Chat history. Defaults to [].
         Returns:
-            List[Dict[str, str]]: Updated chat history
             Dict[str, str]: Bot message
         """
         # Save user message to history
-        chat_history.append(user_message)
+        self.add_history(user_message)
+        chat_history = self.get_history()
 
         # Generate bot message
         self.rails.register_action_param("chat_history", chat_history)
@@ -101,33 +128,29 @@ class Chat:
             messages=chat_history, return_context=True
         )
         bot_message = response[0]
-
         bot_message["content"] = self.post_processing(bot_message["content"])
 
         # Save bot message to history
-        chat_history.append(bot_message)
+        self.add_history(bot_message)
 
-        # clean
-        return chat_history, bot_message
+        return bot_message
 
     async def generate_unmoderated_message(
         self,
         user_message: Dict[str, str],
-        chat_history: List[Dict[str, str]] = [],
-    ) -> Tuple[List[Dict[str, str]], Dict[str, str]]:
+    ) -> Dict[str, str]:
         """Generate a bot message based on the user message using the unmoderated chatbot.
         Args:
             user_message (Dict[str, str]): User message
-            chat_history (List[Dict[str, str]], optional): Chat history. Defaults to [].
         Returns:
-            List[Dict[str, str]]: Updated chat history
             Dict[str, str]: Bot message
         """
         # Save user message to history
-        chat_history.append(user_message)
+        self.add_history(user_message)
+        chat_history = self.get_history()
 
         # Get RAG
-        action_result = await retrieve_information()
+        action_result = await retrieve_information(chat_history=chat_history)
         relevant_context: str = action_result.return_value
 
         # Generate bot message
@@ -136,13 +159,13 @@ class Chat:
             relevant_context=relevant_context,
             history=format_chat_history(chat_history),
         )
-        response = await self.client.text_generation(prompt=prompt)
-        response = self.post_processing(response)
 
+        logger.info(f"Prompt :: {prompt}")
+        response = self.client.text_generation(prompt=prompt, max_new_tokens=100)
+        response = self.post_processing(response)
         bot_message = {"role": "bot", "content": response}
 
         # Save bot message to history
-        chat_history.append(bot_message)
+        self.add_history(bot_message)
 
-        # clean
-        return chat_history, bot_message
+        return bot_message
