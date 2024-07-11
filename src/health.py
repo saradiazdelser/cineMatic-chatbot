@@ -13,7 +13,7 @@ from src.settings import (
 logger = logging.getLogger(__name__)
 
 
-def health_check():
+def health_check(details: bool = False):
     # Custom health check to verify connectivity to the rag api
     try:
         rag_response = requests.post(
@@ -77,4 +77,6 @@ def health_check():
     }
 
     logger.info(f"Health Status: {health_status}")
-    return health_status
+    if details:
+        return health_status
+    return {"status": health_status["status"]}
