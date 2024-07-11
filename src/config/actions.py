@@ -22,33 +22,25 @@ def format_chat_history(chat_history: list) -> str:
 
 
 async def retrieve_information(
-    context: Optional[dict] = None,
+    context: Optional[dict] = {},
     llm: Optional[BaseLLM] = None,
-    rag_prompt: Optional[str] = None,
     chat_history: Optional[list] = [],
 ) -> ActionResult:
     """Retrieve relevant knowledge chunks and update the context."""
-    # Retrieve the user message and bot messages and RAG prompt
-    messages = format_chat_history(chat_history)
-    # rag_prompt = rag_prompt.format(conversation=messages))
-    # logger.info(f"RAG:: Reword prompt: {rag_prompt}")
-
     context_updates = {}
 
-    # # # Generate a rephrased version of the user message for search
-    # response = await llm.agenerate(prompts=[rag_prompt])
-    # search_message = response.generations[0][0].text
-    search_message = messages
-    logger.info(f"RAG:: Reword response: {search_message}")
+    # Format chat history into a single string
+    messages = format_chat_history(chat_history)
+    logger.info(f"RAG :: Request: {str(messages)}")
 
-    chunks = await __retrieve_relevant_chunks(text=search_message)
+    chunks = await __retrieve_relevant_chunks(text=str(messages))
     if chunks != []:
         context_updates["relevant_chunks"] = "\n".join(chunks)
     else:
         # Keep the existing relevant_chunks if we have them
         context_updates["relevant_chunks"] = context.get("relevant_chunks", "")
 
-    logger.debug(f"RAG:: Response: {context_updates['relevant_chunks']}")
+    logger.info(f"RAG :: Response: {str(context_updates['relevant_chunks'])}")
 
     return ActionResult(
         return_value=context_updates["relevant_chunks"],
@@ -67,5 +59,5 @@ async def __retrieve_relevant_chunks(text: str):
     }
     response = requests.post(url, headers=headers, json=body)
 
-    documents = [item["document"] for item in response.json()]
+    documents = [str(item["document"]).strip() for item in response.json()]
     return documents

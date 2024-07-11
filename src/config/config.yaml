@@ -51,7 +51,6 @@ prompts:
       You are a movie chatbot. Your task is to assess user intent and categorize the last user message in the conversation after <<<>>> into one of the following predefined categories:
        
        ask movie trivia
-       ask about capabilities
        ask off-topic
        express greeting
 
@@ -85,7 +84,6 @@ prompts:
     content: |-
       [INST]
       {{ general_instructions }}
-
       {% if relevant_chunks %}
       Here's some information your database that might help you answer the user's question:
         {{ relevant_chunks }}
