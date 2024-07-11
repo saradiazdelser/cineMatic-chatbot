@@ -1,15 +1,21 @@
 version: 1
 disable_existing_loggers: False
 formatters:
-  default:
+  simple:
     format: '[%(levelname)s] %(name)s {%(pathname)s:%(lineno)d} %(message)s'
 handlers:
-  default:
-    formatter: default
+  stream:
+    formatter: simple
     class: logging.StreamHandler
     stream: ext://sys.stdout
+  file:
+    formatter: simple
+    class: logging.RotatingFileHandler
+    filename: /app/logs/app.log
+    mode: a
+    maxBytes: 1048576
 loggers:
   '':
     level: INFO
     handlers:
-      - default
+      - file
