@@ -1,14 +1,17 @@
-# Welcome to Guardrails Demo
+# Matic - A Chatbot for All Your Movie Trivia
 
-Welcome to our Guardrails Demo, where we showcase the basic functionalities of NeMo Guardrails. The purpose of this project is to demonstrate how the guardrails technology can keep the language model (LLM) on topic, specifically answering movie-related questions.
+Welcome to Matic Chatbot, a comprehensive demonstration of the NeMo Guardrails framework's capabilities. This project highlights how guardrails technology can effectively maintain the language model (LLM) focus, particularly in the context of Retrieval-Augmented Generation (RAG) for answering movie-related questions.
+
+Matic is designed to be an engaging and informative tool for movie enthusiasts, providing accurate answers to a wide range of movie-related trivia. By leveraging LLMs and robust moderation tools, Matic ensures that conversations remain on-topic and informative, showcasing the potential of the NeMo Guardrails framework in real-world applications.
 
 ## Technical Details
 
 - **Model:** `mistralai/Mixtral-8x7B-Instruct-v0.1`
-- **UI:** ChainLit
-- **Inference:** TGI
+- **User Interface (UI):** ChainLit
+- **Inference:** Text Generation Inference (TGI)
 - **Moderation:** NVIDIA NeMo Guardrails
-- **Vector Store (RAG):** Qdrant DB for Rag
+- **Vector Store (RAG):** Qdrant
+- **Fact-Checking:** AlignScore
 
 ## Important Note
 

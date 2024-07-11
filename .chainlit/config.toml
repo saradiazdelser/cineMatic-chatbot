@@ -51,7 +51,7 @@ auto_tag_thread = true
 
 [UI]
 # Name of the assistant.
-name = "Assistant"
+name = "Matic Chatbot"
 
 # Description of the assistant. This is used for HTML tags.
 # description = ""

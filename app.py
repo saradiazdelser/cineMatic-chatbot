@@ -26,6 +26,6 @@ app.mount("/public", public, name="public")
 # Include Chainlit frontend
 mount_chainlit(app=app, target="src/frontend.py", path="/chatbot")
 
-
+# TODO: fix logger (use uvicorn logger)
 if __name__ == "__main__":
     uvicorn.run(app, log_config=setup_logging("src/logging.yaml"))
