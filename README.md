@@ -1,4 +1,4 @@
-# Matic - A Chatbot for All Your Movie Trivia
+# (Cine)Matic - A Chatbot for All Your Movie Trivia
 
 Welcome to Matic Chatbot, a comprehensive demonstration of the NeMo Guardrails framework's capabilities. This project highlights how guardrails technology can effectively maintain the language model (LLM) focus, particularly in the context of Retrieval-Augmented Generation (RAG) for answering movie-related questions.
 
