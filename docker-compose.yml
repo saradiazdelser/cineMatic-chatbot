@@ -34,6 +34,13 @@ services:
   chat:
     container_name: chatbot-app
     build: .  # Path to the app directory containing Dockerfile
+    environment:
+      - HOST=0.0.0.0
+      - PORT=8000
+      - INFERENCE_ENDPOINT=http://10.10.78.11:8081
+      - INFERENCE_HEALTH_ENDPOINT=http://10.10.78.11:8081/health
+      - RETRIEVAL_ENDPOINT=http://rag:6000/search
+      - ALIGNSCORE_ENDPOINT=http://alignscore:5000
     ports:
       - "8000:8000"
     volumes:

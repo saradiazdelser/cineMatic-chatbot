@@ -1,9 +1,11 @@
+import os
+
 import uvicorn
 import yaml
 from chainlit.utils import mount_chainlit
 from fastapi import FastAPI
 
-from src.api import public, redirect_middleware, router_api
+from src.api import public, redirect_middleware, router
 
 
 def setup_logging(config_file):
@@ -18,14 +20,21 @@ app = FastAPI()
 app.middleware("http")(redirect_middleware)
 
 # Include the API router in the app
-app.include_router(router_api, prefix="/api")
+app.include_router(router, prefix="/api")
 
 # Include /public directory for static files
 app.mount("/public", public, name="public")
 
+ENDPOINTS = {route.name: route.path for route in app.routes}
+
 # Include Chainlit frontend
 mount_chainlit(app=app, target="src/frontend.py", path="/chatbot")
 
-# TODO: fix logger (use uvicorn logger)
+
 if __name__ == "__main__":
-    uvicorn.run(app, log_config=setup_logging("src/logging.yaml"))
+    uvicorn.run(
+        app,
+        host=os.environ.get("HOST"),
+        port=int(os.environ.get("PORT")),
+        reload=bool(os.environ.get("RELOAD_FLAG")),
+    )

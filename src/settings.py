@@ -1,7 +1,15 @@
-INFERENCE_ENDPOINT = "http://10.10.78.11:8081"
-INFERENCE_HEALTH_ENDPOINT = "http://10.10.78.11:8081/health"
-# RETRIEVAL_ENDPOINT = "http://rag:6000/search" # Access RAG in Docker network
-RETRIEVAL_ENDPOINT = "http://localhost:6000/search"
-# ALIGNSCORE_ENDPOINT = "http://alignscore:5000/base_model" # Access AlignScore in Docker network
-ALIGNSCORE_ENDPOINT = "http://localhost:5000/base_model"
+import os
+
+INFERENCE_ENDPOINT = os.environ.get("INFERENCE_ENDPOINT")
+INFERENCE_HEALTH_ENDPOINT = os.environ.get("INFERENCE_HEALTH_ENDPOINT")
+RETRIEVAL_ENDPOINT = os.environ.get("RETRIEVAL_ENDPOINT")
+ALIGNSCORE_ENDPOINT = os.environ.get("ALIGNSCORE_ENDPOINT")
 FACTCHECKING = False
+
+HOST = os.environ.get("HOST", "localhost")
+PORT = os.environ.get("PORT", 8000)
+ENDPOINTS = {
+    "moderated": f"http://{HOST}:{PORT}/api/generate_moderated",
+    "unmoderated": f"http://{HOST}:{PORT}/api/generate_unmoderated",
+    "clear": f"http://{HOST}:{PORT}/api/clear",
+}

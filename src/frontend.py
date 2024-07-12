@@ -6,11 +6,8 @@ import chainlit as cl
 import requests
 from chainlit import logger
 
-endpoints = {
-    "moderated": "http://127.0.0.1:8001/api/generate_moderated",
-    "unmoderated": "http://127.0.0.1:8001/api/generate_unmoderated",
-    "clear": "http://127.0.0.1:8001/api/clear",
-}
+from src.settings import ENDPOINTS
+
 headers = {
     "Content-Type": "application/json",
     "accept": "application/json",
@@ -41,7 +38,7 @@ async def chat_profile():
 
 @cl.on_chat_start
 async def on_chat_start():
-    response = await async_post_request(endpoints["clear"], {})
+    response = await async_post_request(ENDPOINTS["clear"], {})
     logger.info("New Chat")
 
 
@@ -54,7 +51,7 @@ async def main(message: cl.Message):
     # user_message = Message(role="user", content=message.content or "")
 
     try:
-        url = endpoints.get(chat_profile.lower())
+        url = ENDPOINTS.get(chat_profile.lower())
         bot_message = await async_post_request(url, user_message)
         await cl.Message(content=bot_message.get("content")).send()
     except Exception as e:
