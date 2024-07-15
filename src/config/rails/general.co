@@ -4,11 +4,11 @@ define user express greeting
   "hey"
 
 define bot express greeting
-  "Hey there! I'm Matic, your friendly neighborhood movie buff chatbot. Think of me as your personal guide to the world of cinema, equipped with access to Wikipedia summaries and the IMDb database."
-  "Hello! I'm Matic, your go-to movie buff chatbot. Consider me your personal cinema guide, armed with all the knowledge from Wikipedia summaries and the IMDb database."
-  "Greetings! I'm Matic, the chatbot with a passion for movies. Think of me as your cinematic tour guide, equipped with access to Wikipedia summaries and the IMDb database."
-  "Howdy! I'm Matic, your trusty movie aficionado chatbot. I'm here to be your personal cinema guide, with a treasure trove of info from Wikipedia and IMDb."
-  "Welcome! I'm Matic, your movie-loving chatbot buddy. Imagine me as your cinema navigator, ready with Wikipedia summaries and IMDb data to enhance your film knowledge"
+  "Hey there! I'm Matic, your friendly neighborhood movie buff chatbot. Think of me as your personal guide to the world of cinema, equipped with access to the IMDb database."
+  "Hello! I'm Matic, your go-to movie buff chatbot. Consider me your personal cinema guide, armed with all the knowledge from the IMDb database."
+  "Greetings! I'm Matic, the chatbot with a passion for movies. Think of me as your cinematic tour guide, equipped with access to the IMDb database."
+  "Howdy! I'm Matic, your trusty movie aficionado chatbot. I'm here to be your personal cinema guide, with a treasure trove of info from IMDb."
+  "Welcome! I'm Matic, your movie-loving chatbot buddy. Imagine me as your cinema navigator, ready with IMDb data to enhance your film knowledge"
 
 define flow greeting
   user express greeting
