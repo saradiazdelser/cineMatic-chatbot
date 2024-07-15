@@ -60,7 +60,7 @@ prompts:
       {{ history | user_assistant_sequence }}
       [/INST]
 
-    output_parser: "verbose_v1"
+    output_parser: "verbose_v2"
     parameters:
       max_new_tokens: 5
 
@@ -70,12 +70,12 @@ prompts:
       [INST]
       Choose the bot intent for the last turn of this conversation. 
       Respond only with the bot intent.
-      {{ examples | verbose_v1 }}
+      {{ examples | verbose_v2 }}
 
       {{ history | colang | verbose_v1 }}
       Bot intent: [/INST]
 
-    output_parser: "verbose_v1"
+    output_parser: "verbose_v2"
     parameters:
       max_new_tokens: 3
 
@@ -94,7 +94,7 @@ prompts:
       {{ history | colang | verbose_v1 }}
       [/INST]
 
-    output_parser: "verbose_v1"
+    output_parser: "verbose_v2"
 
   # Prompt for checking if user input is ethical and legal
   - task: self_check_input
