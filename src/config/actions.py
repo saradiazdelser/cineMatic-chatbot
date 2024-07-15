@@ -33,7 +33,11 @@ async def retrieve_information(
     messages = format_chat_history(chat_history)
     logger.info(f"RAG :: Request: {str(messages)}")
 
-    chunks = await __retrieve_relevant_chunks(text=str(messages))
+    try:
+        chunks = await __retrieve_relevant_chunks(text=str(messages))
+    except Exception as e:
+        logger.error(f"RAG :: Failed to retrieve relevant chunks: {str(e)}")
+        chunks = []
     if chunks != []:
         context_updates["relevant_chunks"] = "\n".join(chunks)
     else:
