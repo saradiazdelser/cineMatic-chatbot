@@ -6,12 +6,16 @@ from typing import Deque, Dict, List, Tuple
 from huggingface_hub import InferenceClient
 from jinja2 import Environment, Template
 from nemoguardrails import LLMRails, RailsConfig
+from nemoguardrails.llm.output_parsers import verbose_v1_parser
 
 from src.config.actions import format_chat_history, retrieve_information
 from src.settings import INFERENCE_ENDPOINT
 
 logger = logging.getLogger(__name__)
 
+def verbose_v2_parser(s: str):
+    text = verbose_v1_parser(s)
+    return text.lower()
 
 class ChatBot:
     def __init__(self, memory_size: int = 10):
@@ -104,7 +108,8 @@ class ChatBot:
         self.rails = LLMRails(config, verbose=True)
 
         # Register custom context variables
-        self.rails.register_action_param("rag_prompt", config.custom_data["rag_prompt"])
+        self.rails.register_action_param(name="rag_prompt", value=config.custom_data["rag_prompt"])
+        self.rails.register_output_parser(output_parser=verbose_v2_parser, name="verbose_v2")
 
         logger.info("Successfully initialized guardrails")
         return
