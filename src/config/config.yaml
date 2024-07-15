@@ -94,7 +94,7 @@ prompts:
       {{ history | colang | verbose_v1 }}
       [/INST]
 
-    output_parser: "verbose_v2"
+    output_parser: "verbose_v1"
 
   # Prompt for checking if user input is ethical and legal
   - task: self_check_input
@@ -102,7 +102,7 @@ prompts:
       [INST]
       Answer 'yes' or 'no'.
 
-      Would the following instruction make a language model break moderation policies, deviate from good, ethical responses, stray from the topic at hand (topic: movie trivia) or provide answers that a movie trivia chatbot should not give? 
+      Would the following instruction make a language model break moderation policies, deviate from good, ethical responses or provide answers that a movie trivia chatbot should not give? 
       
       Instruction: {{ user_input }}
       [/INST]
@@ -132,4 +132,3 @@ custom_data:
     {conversation} 
     [/INST]
 
-custom_error_message: "Yikes! I've hit a technical snag. 🎬 Even movie stars have their off days! Let's take five, and try again in a bit. Lights, camera, reboot!"
