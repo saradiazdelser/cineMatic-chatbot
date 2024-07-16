@@ -20,6 +20,33 @@ async def async_post_request(url, json=None) -> Dict:
             return await response.json()
 
 
+@cl.set_starters
+async def set_starters():
+    return [
+        cl.Starter(
+            label="Iconic Quotes",
+            message="Matic, what's a famous quote from 'The Godfather'?",
+            icon="/public/quote-left-icon.svg",
+            ),
+
+        cl.Starter(
+            label="Director's Cinematography",
+            message="Hi Matic, what movies has Christopher Nolan directed?",
+            icon="/public/video-roll-icon.svg",
+            ),
+        cl.Starter(
+            label="Award-Winning Movies",
+            message="Hi Matic, which film won the Best Picture Oscar in 2020?",
+            icon="/public/winning-cup-icon.svg",
+            ),
+        cl.Starter(
+            label="Movie Plot",
+            message="Matic, whats the movie 'Inception' about?",
+            icon="/public/movie-media-player-icon.svg",
+            )
+        ]
+# ...
+
 @cl.set_chat_profiles
 async def chat_profile():
     return [
