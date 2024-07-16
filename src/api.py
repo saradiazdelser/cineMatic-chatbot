@@ -2,11 +2,12 @@
 import logging
 from pathlib import Path
 from typing import Dict, List
+from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Request
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from src.chat import ChatBot
 from src.health import health_check
@@ -17,8 +18,10 @@ chat: ChatBot = ChatBot()
 
 
 class Message(BaseModel):
+    id: UUID = Field(default_factory=uuid4)
     role: str
     content: str
+    context: str = ""
 
 
 # create router
