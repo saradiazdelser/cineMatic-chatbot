@@ -32,12 +32,12 @@ async def chat_profile():
         cl.ChatProfile(
             name="Moderated",
             markdown_description="Chatbot is moderated using the **NVIDIA NeMo Guardrails** framework.",
-            icon="public/moderated_icon.jpg",
+            icon="public/chatbot_moderated.svg",
         ),
         cl.ChatProfile(
             name="Unmoderated",
             markdown_description="Chatbot uses no moderation framework. Questions will go directly to the model.",
-            icon="public/unmoderated_icon.jpg",
+            icon="public/chatbot_unmoderated.svg",
         ),
     ]
 
