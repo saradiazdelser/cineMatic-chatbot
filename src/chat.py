@@ -65,7 +65,7 @@ class ChatBot:
 
     def build_prompt_from_config(self, config: RailsConfig):
         """Build prompt template from RailsConfig object."""
-        self.system_prompt = config.instructions
+        self.system_prompt = config.instructions[0].content
         generate_bot_message = [
             prompt.content
             for prompt in config.prompts
@@ -83,7 +83,6 @@ class ChatBot:
         # Add a fallback for missing filters
         env.filters["colang"] = ignore_missing_filters
         env.filters["verbose_v1"] = ignore_missing_filters
-
         self.prompt_template = env.from_string(generate_bot_message)
         return
 
@@ -168,10 +167,11 @@ class ChatBot:
         # Generate bot message
         prompt = self.prompt_template.render(
             general_instructions=self.system_prompt,
-            relevant_context=relevant_context,
+            relevant_chunks=relevant_context,
             history=format_chat_history(chat_history),
         )
 
+        logger.info(f"Prompt template :: {self.prompt_template.debug_info}")
         logger.info(f"Prompt :: {prompt}")
         response = self.client.text_generation(prompt=prompt, max_new_tokens=100)
         response = self.post_processing(response)

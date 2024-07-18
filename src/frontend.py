@@ -41,6 +41,7 @@ async def chat_profile():
         ),
     ]
 
+
 @cl.set_starters
 async def set_starters():
     return [
@@ -48,24 +49,24 @@ async def set_starters():
             label="Iconic Quotes",
             message="Matic, what's a famous quote from 'The Godfather'?",
             icon="/public/quote-left-icon.svg",
-            ),
-
+        ),
         cl.Starter(
             label="Director's Cinematography",
             message="Hi Matic, what movies has Christopher Nolan directed?",
             icon="/public/video-roll-icon.svg",
-            ),
+        ),
         cl.Starter(
             label="Award-Winning Movies",
             message="Hi Matic, which film won the Best Picture Oscar in 2020?",
             icon="/public/winning-cup-icon.svg",
-            ),
+        ),
         cl.Starter(
             label="Movie Plot",
             message="Matic, whats the movie 'Inception' about?",
             icon="/public/movie-media-player-icon.svg",
-            )
-        ]
+        ),
+    ]
+
 
 @cl.on_chat_start
 async def on_chat_start():
@@ -73,12 +74,16 @@ async def on_chat_start():
     _ = await async_post_request(ENDPOINTS["clear"], {})
     logger.info("New Chat")
 
+
 @cl.action_callback("Show Sources")
 async def on_action(action: cl.Action):
-    context_text = cl.user_session.get("messages_history").get(action.forId).get("context", "")
-    context_element = cl.Text(name="📄 Context", content=context_text)
+    context_text = (
+        cl.user_session.get("messages_history").get(action.forId).get("context", "")
+    )
+    context_element = cl.Text(name="📄 Sources", content=context_text)
     await context_element.send(for_id=action.forId)
     await action.remove()
+
 
 @cl.on_message  # called every time a user sends a message
 async def message(message: cl.Message):
@@ -91,16 +96,18 @@ async def message(message: cl.Message):
         url = ENDPOINTS.get(chat_profile.lower())
         bot_message = await async_post_request(url, user_message)
         store_message(bot_message)
-        
+
         # Create chainlit message object
-        message = cl.Message(content=bot_message.get("content"), id=str(bot_message.get("id")))
+        message = cl.Message(
+            content=bot_message.get("content"), id=str(bot_message.get("id"))
+        )
         action_show_sources = cl.Action(
             name="Show Sources", value=message.id, label="📄 Display Sources"
         )
         # Send bot message
         await message.send()
         await action_show_sources.send(for_id=message.id)
-        
+
     except Exception as e:
         logger.error(e)
         await cl.Message(content="Connection Error").send()
