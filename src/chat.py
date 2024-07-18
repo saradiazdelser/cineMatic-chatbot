@@ -13,9 +13,11 @@ from src.settings import INFERENCE_ENDPOINT
 
 logger = logging.getLogger(__name__)
 
+
 def verbose_v2_parser(s: str):
     text = verbose_v1_parser(s)
     return text.lower()
+
 
 class ChatBot:
     def __init__(self, memory_size: int = 10):
@@ -108,8 +110,12 @@ class ChatBot:
         self.rails = LLMRails(config, verbose=True)
 
         # Register custom context variables
-        self.rails.register_action_param(name="rag_prompt", value=config.custom_data["rag_prompt"])
-        self.rails.register_output_parser(output_parser=verbose_v2_parser, name="verbose_v2")
+        self.rails.register_action_param(
+            name="rag_prompt", value=config.custom_data["rag_prompt"]
+        )
+        self.rails.register_output_parser(
+            output_parser=verbose_v2_parser, name="verbose_v2"
+        )
 
         logger.info("Successfully initialized guardrails")
         return
@@ -130,10 +136,11 @@ class ChatBot:
         # Generate bot message
         self.rails.register_action_param("chat_history", chat_history)
         response = await self.rails.generate_async(
-            messages=chat_history, return_context=True
+            messages=chat_history, options={"output_vars": True}
         )
-        bot_message = response[0]
+        bot_message = response.response[0]  # Get the bot message generated
         bot_message["content"] = self.post_processing(bot_message["content"])
+        bot_message["context"] = response.output_data.get("relevant_chunks")
 
         # Save bot message to history
         self.add_history(bot_message)
@@ -168,7 +175,7 @@ class ChatBot:
         logger.info(f"Prompt :: {prompt}")
         response = self.client.text_generation(prompt=prompt, max_new_tokens=100)
         response = self.post_processing(response)
-        bot_message = {"role": "bot", "content": response}
+        bot_message = {"role": "bot", "content": response, "context": relevant_context}
 
         # Save bot message to history
         self.add_history(bot_message)

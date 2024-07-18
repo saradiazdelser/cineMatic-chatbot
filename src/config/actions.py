@@ -42,7 +42,7 @@ async def retrieve_information(
         context_updates["relevant_chunks"] = "\n".join(chunks)
     else:
         # Keep the existing relevant_chunks if we have them
-        context_updates["relevant_chunks"] = context.get("relevant_chunks", "")
+        context_updates["relevant_chunks"] = context.get("relevant_chunks", None)
 
     logger.info(f"RAG :: Response: {str(context_updates['relevant_chunks'])}")
 
@@ -63,5 +63,9 @@ async def __retrieve_relevant_chunks(text: str):
     }
     response = requests.post(url, headers=headers, json=body)
 
-    documents = [str(item["document"]).strip() for item in response.json()]
+    documents = [
+        str(item["document"]).strip()
+        for item in response.json()
+        if str(item["document"]).strip()
+    ]
     return documents
