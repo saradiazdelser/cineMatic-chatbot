@@ -21,7 +21,7 @@ class Message(BaseModel):
     id: UUID = Field(default_factory=uuid4)
     role: str
     content: str
-    context: str = ""
+    context: str = Field(default="N/A")
 
 
 # create router
@@ -35,6 +35,7 @@ async def moderated(message: Message) -> Message:
     logger.info(f"API :: Received message: {message}")
     user_message = message.model_dump()
     bot_message = await chat.generate_moderated_message(user_message)
+    print(bot_message)
     return Message(**bot_message)
 
 

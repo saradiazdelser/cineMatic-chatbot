@@ -9,7 +9,7 @@ services:
     volumes:
       - ./libraries/db/qdrant:/qdrant/storage
     networks:
-      - guardrails-demo-network
+      - matic-demo
 
   rag:
     container_name: rag-app
@@ -21,7 +21,7 @@ services:
     depends_on:
       - qdrant
     networks:
-      - guardrails-demo-network
+      - matic-demo
 
   alignscore:
     container_name: alignscore-server
@@ -29,7 +29,7 @@ services:
     ports:
       - "5000:5000"
     networks:
-      - guardrails-demo-network
+      - matic-demo
 
   chat:
     container_name: chatbot-app
@@ -46,12 +46,11 @@ services:
     volumes:
       - .:/app
     depends_on:
-      - qdrant
       - rag
     networks:
-      - guardrails-demo-network
+      - matic-demo
 
 
 networks:
-  guardrails-demo-network:
+  matic-demo:
     driver: bridge
